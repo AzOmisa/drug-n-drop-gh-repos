@@ -3,7 +3,7 @@ import Link from 'antd/es/typography/Link';
 import { Calendar, ExternalLink, GitFork, Star } from 'lucide-react';
 
 import { useGetRepositoryQuery } from '../store/githubApi';
-import type { Repository } from '../store/githubApi';
+import type { Repository } from '../types/repository';
 
 interface RepositoryModalProps {
   repo: Repository;

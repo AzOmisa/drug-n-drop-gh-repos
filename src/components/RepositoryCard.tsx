@@ -4,9 +4,9 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { RepositoryModal } from './RepositoryModal';
-import type { Repository } from '../store/githubApi';
 import { addToFavorites, removeFromFavorites } from '../store/repositoriesSlice';
 import type { RootState } from '../store/store';
+import type { Repository } from '../types/repository';
 
 export const RepositoryCard: React.FC<{
   repo: Repository;

@@ -4,6 +4,7 @@ import { Pagination } from 'antd';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import EmptyState from './EmptyState';
 import { Filters } from './Filters';
 import { RepositoryCard } from './RepositoryCard';
 import { setCurrentPage } from '../store/repositoriesSlice';
@@ -42,26 +43,30 @@ export const RepositoryList: React.FC = () => {
       <Filters />
 
       <div className="flex-1 overflow-y-auto mb-4">
-        <Droppable droppableId="repository-list" type="REPO">
-          {(provided) => (
-            <div {...provided.droppableProps} ref={provided.innerRef}>
-              {filteredAndSortedRepos.map((repo, index) => (
-                <Draggable key={repo.id} draggableId={repo.id.toString()} index={index}>
-                  {(provided, snapshot) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                    >
-                      <RepositoryCard repo={repo} isDragging={snapshot.isDragging} />
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
+        {!totalCount ? (
+          <EmptyState />
+        ) : (
+          <Droppable droppableId="repository-list" type="REPO">
+            {(provided) => (
+              <div {...provided.droppableProps} ref={provided.innerRef}>
+                {filteredAndSortedRepos.map((repo, index) => (
+                  <Draggable key={repo.id} draggableId={repo.id.toString()} index={index}>
+                    {(provided, snapshot) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                      >
+                        <RepositoryCard repo={repo} isDragging={snapshot.isDragging} />
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        )}
       </div>
 
       {totalCount > 0 && (

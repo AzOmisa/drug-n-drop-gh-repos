@@ -1,6 +1,6 @@
 import { type PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-import type { Repository } from './githubApi';
+import type { Repository } from '../types/repository';
 
 interface RepoState {
   repositories: Repository[];
@@ -31,7 +31,7 @@ const repoSlice = createSlice({
       action: PayloadAction<{ items: Repository[]; total_count?: number }>,
     ) => {
       state.repositories = action.payload.items;
-      if (action.payload.total_count) state.totalCount = action.payload.total_count;
+      state.totalCount = action.payload.total_count || 0;
     },
     setSearchQuery: (state, action) => {
       state.searchQuery = action.payload;
@@ -51,8 +51,8 @@ const repoSlice = createSlice({
     },
     addToFavorites: (state, action: PayloadAction<{ repo: Repository; insertIndex?: number }>) => {
       const { repo, insertIndex } = action.payload;
-      state.repositories = state.repositories.filter((r) => r.id !== repo.id);
-      if (!state.favorites.find((fav) => fav.id === repo.id)) {
+      state.repositories = state.repositories.filter((r: Repository) => r.id !== repo.id);
+      if (!state.favorites.find((fav: Repository) => fav.id === repo.id)) {
         if (typeof insertIndex === 'number') {
           state.favorites.splice(insertIndex, 0, repo);
         } else {

@@ -6,8 +6,8 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 import { RepositoryCard } from './RepositoryCard';
-import { type Repository } from '../store/githubApi';
 import type { RootState } from '../store/store';
+import { type Repository } from '../types/repository';
 
 export const FavoritesComponent: React.FC = () => {
   const { favorites } = useSelector((state: RootState) => state.repositories);

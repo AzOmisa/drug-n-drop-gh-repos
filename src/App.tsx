@@ -4,6 +4,7 @@ import { Card, Spin, Typography } from 'antd';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { ErrorState } from './components/ErrorState';
 import { FavoritesComponent } from './components/Favorites';
 import { RepositoryList } from './components/RepositoryList';
 import { SearchComponent } from './components/SearchComponent';
@@ -21,7 +22,7 @@ const App: React.FC = () => {
   const dispatch = useDispatch();
   const { currentPage, searchQuery } = useSelector((state: RootState) => state.repositories);
 
-  const { data, isFetching } = useSearchRepositoriesQuery(
+  const { data, isFetching, isError, refetch, isSuccess } = useSearchRepositoriesQuery(
     {
       query: searchQuery,
       page: currentPage,
@@ -30,10 +31,10 @@ const App: React.FC = () => {
   );
 
   useEffect(() => {
-    if (data) {
-      dispatch(setRepositories({ items: data.items, total_count: data.total_count }));
+    if (isSuccess) {
+      dispatch(setRepositories({ items: data.items || [], total_count: data.total_count }));
     }
-  }, [data, dispatch]);
+  }, [data, dispatch, isSuccess]);
 
   const handleDragEnd = (result: DropResult) => {
     const { source, destination, draggableId } = result;
@@ -91,7 +92,9 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-100 p-4">
       <div className="max-w-7xl mx-auto">
-        <Typography className="text-center mb-6">GitHub Repository Manager</Typography>
+        <Typography.Title className="text-center mb-6">
+          Менеджер репозиториев Github
+        </Typography.Title>
 
         <SearchComponent loading={isFetching} />
 
@@ -99,17 +102,23 @@ const App: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card
               title="Репозитории"
-              className="h-[600px]"
+              className="h-[70dvh]"
               classNames={{
                 body: 'w-full h-[calc(100%_-_60px)] p-2 flex flex-col items-center justify-center',
               }}
             >
-              {isFetching ? <Spin size="large" /> : <RepositoryList />}
+              {isFetching ? (
+                <Spin size="large" />
+              ) : isError ? (
+                <ErrorState onRetry={refetch} />
+              ) : (
+                <RepositoryList />
+              )}
             </Card>
 
             <Card
               title="Избранное"
-              className="h-[600px]"
+              className="h-[70dvh]"
               classNames={{ body: 'h-[calc(100%_-_60px)] p-2' }}
             >
               <FavoritesComponent />
