@@ -22,13 +22,14 @@ const App: React.FC = () => {
   const dispatch = useDispatch();
   const { currentPage, searchQuery } = useSelector((state: RootState) => state.repositories);
 
-  const { data, isFetching, isError, refetch, isSuccess } = useSearchRepositoriesQuery(
-    {
-      query: searchQuery,
-      page: currentPage,
-    },
-    { skip: !searchQuery },
-  );
+  const { data, isFetching, isError, refetch, isSuccess, isUninitialized } =
+    useSearchRepositoriesQuery(
+      {
+        query: searchQuery,
+        page: currentPage,
+      },
+      { skip: !searchQuery },
+    );
 
   useEffect(() => {
     if (isSuccess) {
@@ -112,7 +113,7 @@ const App: React.FC = () => {
               ) : isError ? (
                 <ErrorState onRetry={refetch} />
               ) : (
-                <RepositoryList />
+                <RepositoryList isUninitialized={isUninitialized} />
               )}
             </Card>
 

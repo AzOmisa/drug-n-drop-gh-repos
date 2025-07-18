@@ -10,7 +10,11 @@ import { RepositoryCard } from './RepositoryCard';
 import { setCurrentPage } from '../store/repositoriesSlice';
 import type { RootState } from '../store/store';
 
-export const RepositoryList: React.FC = () => {
+interface RepositoryListProps {
+  isUninitialized?: boolean;
+}
+
+export const RepositoryList: React.FC<RepositoryListProps> = ({ isUninitialized }) => {
   const dispatch = useDispatch();
   const { repositories, currentPage, totalCount, sortBy, sortOrder, textFilter, favorites } =
     useSelector((state: RootState) => state.repositories);
@@ -44,11 +48,11 @@ export const RepositoryList: React.FC = () => {
 
       <div className="flex-1 overflow-y-auto mb-4">
         {!totalCount ? (
-          <EmptyState />
+          <EmptyState isUninitialized={isUninitialized} />
         ) : (
           <Droppable droppableId="repository-list" type="REPO">
             {(provided) => (
-              <div {...provided.droppableProps} ref={provided.innerRef}>
+              <div {...provided.droppableProps} ref={provided.innerRef} className="min-h-[200px]">
                 {filteredAndSortedRepos.map((repo, index) => (
                   <Draggable key={repo.id} draggableId={repo.id.toString()} index={index}>
                     {(provided, snapshot) => (

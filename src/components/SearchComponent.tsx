@@ -37,7 +37,7 @@ export const SearchComponent: React.FC<SearchComponentProps> = ({ loading }) => 
           loading={loading}
           icon={<Search />}
         >
-          Поиск
+          Найти
         </Button>
       </Space.Compact>
     </div>
